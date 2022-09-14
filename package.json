@@ -1,0 +1,20 @@
+{
+  "name": "scraperpuppeteerdrip",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarshSuvarna99/puppeteerScrapingDrip.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HarshSuvarna99/puppeteerScrapingDrip/issues"
+  },
+  "homepage": "https://github.com/HarshSuvarna99/puppeteerScrapingDrip#readme"
+}
