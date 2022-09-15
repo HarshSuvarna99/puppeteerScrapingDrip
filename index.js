@@ -9,7 +9,7 @@ async function start() {
     //array to store all scaraped data in object form
     let allProfile = []
     //loop along the pages
-    for (let i=0; i<21; i++){
+    for (let i=0; i<22; i++){
         //getting all the links in the page
         const hrefs = await page.evaluate(() => {
             let links = [];
@@ -20,25 +20,36 @@ async function start() {
                 }
             return links;
             });
-        //removing null values in listx
+        //removing null values in list
         allHrefs = [...new Set(hrefs)].filter(el=>el!==null);
         //loop on the cards in the page
         for (const link of allHrefs){
-            //console.log(allHrefs);
             //go to this page
             await page.goto(link)
+            objs = {}
             //await page.waitForNavigation();
+
+            //scraping contact info
+            try{
             await page.waitForSelector("#content > div.company-body > div > div > div.col-md-4 > div.subcontainer_style3.company-contact", {
                 timeout:10000,
                 visible: true,
             });
-            //scraping contact info
-            let objs = {}
-            if(i!==12){
+            
+            try{
+            //scraping company name
+            await page.waitForSelector("#content > div.company-page-header.relative.no-company-brief > div > div > div.col-md-7.col-lg-8.company-profile-header-leftcol > div > h2", {
+                timeout:10000,
+                visible: true,
+            });
+            let compName = await page.$eval("#content > div.company-page-header.relative.no-company-brief > div > div > div.col-md-7.col-lg-8.company-profile-header-leftcol > div > h2", (el)=>el.innerText)
+            objs = {CompanyName: compName} 
+            }catch(err){console.log('No name')}
             let info = await page.$eval("#content > div.company-body > div > div > div.col-md-4 > div.subcontainer_style3.company-contact > div > table > tbody", (el)=>el.innerText)
             infos = info.split("\n").map((x)=> {objs[x.split(":")[0]] = x.split(": ")[1]})
-            }
+            
             allProfile.push(objs)
+        }catch(err){console.log(console.log('No data found'));}
             await page.goBack();
             }
     //wait for the selector to show up in the newly nagivated page
@@ -46,9 +57,9 @@ async function start() {
         timeout:10000,
         visible: true,
     });
-    console.log(Math.ceil((i/22)*100),"% done")
+    console.log(i)
     //click on next button to nagivate to next page
-    if(i!==20){
+    if(i!==22){
         await page.click("#main_content > div.pagination_app_div > div.row > div.col-sm-8 > div > div > div:nth-child(1) > div.btn-group.btn-group-sm.next-button > a")
     }
     }
@@ -59,3 +70,4 @@ async function start() {
     browser.close()
 }
 start()
+
